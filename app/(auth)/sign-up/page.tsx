@@ -1,7 +1,9 @@
 import React from 'react'
 
+import SignForm from '@/app/components/signForm';
+
 export default function page() {
   return (
-    <div>page</div>
+    <SignForm type="sign-up"/>
   )
 }

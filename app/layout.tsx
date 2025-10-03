@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Mona_Sans } from "next/font/google";
+import { Urbanist } from "next/font/google";
 import "./globals.css";
 
 const monaSans = Mona_Sans({
@@ -7,9 +8,14 @@ const monaSans = Mona_Sans({
   subsets: ["latin"],
 });
 
+const urbanist = Urbanist({
+  variable: "--font-urbanist-sans",
+  subsets: ["latin"],
+});
+
 export const metadata: Metadata = {
   title: "IntervAI",
-  description: "Web powered by AI that helps to prepare an intervie.",
+  description: "Web powered by AI that helps to prepare an interview.",
 };
 
 export default function RootLayout({
@@ -20,7 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body
-        className={`${monaSans.className} antialiased`}
+        className={`${urbanist.className} antialiased`}
       >
         {children}
       </body>
