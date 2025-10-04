@@ -17,6 +17,10 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { z } from "zod";
 import CustomFormField from "./CustomFormField";
+import { Field, FieldDescription } from "@/components/ui/field";
+import Link from "next/link";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const formAuth = (type: FormType) => {
   return z.object({
@@ -36,6 +40,7 @@ const formAuth = (type: FormType) => {
 };
 
 export default function SignForm({ type }: { type: FormType }) {
+  const router = useRouter();
   const formSchema = formAuth(type);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -48,8 +53,37 @@ export default function SignForm({ type }: { type: FormType }) {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    try {
+      if (type === "sign-in") {
+        toast.success("Welcome");
+        router.push("/");
+      } else {
+        toast.success("Account created succesfully. Please sign in.");
+        router.push("/sign-in");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong");
+      return;
+    }
   }
+
+  const authConfig = {
+    "sign-in": {
+      text: "Don't have an account? ",
+      linkText: "Sign up",
+      linkHref: "/sign-up",
+      btnText: "Access your account",
+    },
+    "sign-up": {
+      text: "have an account? ",
+      linkText: "Sign in",
+      linkHref: "/sign-in",
+      btnText: "Create an account",
+    },
+  };
+
+  const config = authConfig[type];
 
   return (
     <div className={cn("flex flex-col gap-6")}>
@@ -69,12 +103,14 @@ export default function SignForm({ type }: { type: FormType }) {
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <div className="flex flex-col gap-6">
-                <CustomFormField
-                  control={form.control}
-                  name="username"
-                  label="Name"
-                  placeholder="Enter your full name"
-                />
+                {type === "sign-up" && (
+                  <CustomFormField
+                    control={form.control}
+                    name="username"
+                    label="Name"
+                    placeholder="Enter your full name"
+                  />
+                )}
                 <CustomFormField
                   control={form.control}
                   name="email"
@@ -89,7 +125,7 @@ export default function SignForm({ type }: { type: FormType }) {
                   placeholder="Enter your password"
                   type="password"
                 />
-                <div className="grid gap-3">
+                {/* <div className="grid gap-3">
                   <div className="flex items-center">
                     <Label htmlFor="cv">Resume</Label>
                   </div>
@@ -97,13 +133,17 @@ export default function SignForm({ type }: { type: FormType }) {
                   <button className="w-full bg-transparent text-[#666666] h-12">
                     Upload a pdf
                   </button>
-                </div>
+                </div> */}
                 <div className="flex flex-col gap-3">
-                  <Button type="submit" className="w-full">
-                    {type === "sign-in"
-                      ? "Access your account"
-                      : "Create an account"}
-                  </Button>
+                  <Field>
+                    <Button type="submit" className="w-full">
+                      {config.btnText}
+                    </Button>
+                    <FieldDescription className="text-center">
+                      {config.text}
+                      <Link href={config.linkHref}>{config.linkText}</Link>
+                    </FieldDescription>
+                  </Field>
                 </div>
               </div>
             </form>
