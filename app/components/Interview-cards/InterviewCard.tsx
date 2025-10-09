@@ -55,7 +55,7 @@ export default function InterviewCard({
       </div>
       <footer className="flex justify-between items-center gap-2">
         <TechIcons techStack={techstack} />
-        <Button className="w-3/5 lg:text-lg lg:py-6 xl:py-8">
+        <Button className="w-3/5 lg:text-lg lg:py-4 xl:py-6">
           <Link
             href={
               feedback
