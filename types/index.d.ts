@@ -80,7 +80,6 @@ interface SignUpParams {
   uid: string;
   username: string;
   email: string;
-  password: string;
 }
 
 type FormType = "sign-in" | "sign-up";

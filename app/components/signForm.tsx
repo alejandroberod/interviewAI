@@ -19,9 +19,9 @@ import { Field, FieldDescription } from "@/components/ui/field";
 import Link from "next/link";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/firebase/client";
-import { signUp } from "@/lib/actions/auth.action";
+import { signIn, signUp } from "@/lib/actions/auth.action";
 
 const formAuth = (type: FormType) => {
   return z.object({
@@ -56,6 +56,25 @@ export default function SignForm({ type }: { type: FormType }) {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       if (type === "sign-in") {
+
+        const {email, password} = values;
+
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+
+        const idToken = await userCredential.user.getIdToken();
+
+        if (!idToken) {
+          toast.error('Sign in Failed');
+          return;
+        }
+
+        const result = await signIn({email, idToken});
+
+        if (!result?.success) {
+          toast.error(result?.message);
+          return;
+        }
+
         toast.success("Welcome");
         router.push("/");
       } else {
@@ -66,8 +85,7 @@ export default function SignForm({ type }: { type: FormType }) {
         const result = await signUp({
           uid: userCredentials.user.uid,
           username: username!,
-          email, 
-          password
+          email
         });
 
         if (!result?.success) {
@@ -75,7 +93,7 @@ export default function SignForm({ type }: { type: FormType }) {
           return;
         }
 
-        toast.success("Account created succesfully. Please sign in.");
+        toast.success(result.message);
         router.push("/sign-in");
       }
     } catch (error) {
