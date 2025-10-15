@@ -19,7 +19,10 @@ import { Field, FieldDescription } from "@/components/ui/field";
 import Link from "next/link";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { auth } from "@/firebase/client";
 import { signIn, signUp } from "@/lib/actions/auth.action";
 
@@ -54,21 +57,24 @@ export default function SignForm({ type }: { type: FormType }) {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    try {
-      if (type === "sign-in") {
+    if (type === "sign-in") {
+      const { email, password } = values;
 
-        const {email, password} = values;
-
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      try {
+        const userCredential = await signInWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
 
         const idToken = await userCredential.user.getIdToken();
 
         if (!idToken) {
-          toast.error('Sign in Failed');
+          toast.error("Sign in Failed");
           return;
         }
 
-        const result = await signIn({email, idToken});
+        const result = await signIn({ email, idToken });
 
         if (!result?.success) {
           toast.error(result?.message);
@@ -77,15 +83,30 @@ export default function SignForm({ type }: { type: FormType }) {
 
         toast.success("Welcome");
         router.push("/");
-      } else {
-        const {username, email, password} = values;
+      } catch (error: any) {
+        console.error("Error to log into an account ", error);
 
-        const userCredentials = await createUserWithEmailAndPassword(auth, email, password);
+        switch (error.code) {
+          case "auth/invalid-credential":
+            toast.error("Please verify your email or password and try again.");
+            break;
+          default:
+            break;
+        }
+      }
+    } else {
+      const { username, email, password } = values;
 
+      try {
+        const userCredentials = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
         const result = await signUp({
           uid: userCredentials.user.uid,
           username: username!,
-          email
+          email,
         });
 
         if (!result?.success) {
@@ -95,11 +116,17 @@ export default function SignForm({ type }: { type: FormType }) {
 
         toast.success(result.message);
         router.push("/sign-in");
+      } catch (error: any) {
+        console.error("Error creating a user ", error);
+
+        switch (error.code) {
+          case "auth/email-already-in-use":
+            toast.info("This email is already registered. Please Login");
+            break;
+          default:
+            break;
+        }
       }
-    } catch (error) {
-      console.log(error);
-      toast.error("Something went wrong");
-      return;
     }
   }
 
@@ -151,7 +178,6 @@ export default function SignForm({ type }: { type: FormType }) {
                   name="email"
                   label="Email"
                   placeholder="m@example.com"
-                  type="email"
                 />
                 <CustomFormField
                   control={form.control}
