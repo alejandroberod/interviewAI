@@ -95,4 +95,5 @@ interface InterviewFormProps {
 
 interface TechIconProps {
   techStack: string[];
+  className: string
 }

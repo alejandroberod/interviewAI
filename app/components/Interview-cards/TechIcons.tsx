@@ -1,7 +1,7 @@
 import { getTechLogos } from "@/lib/utils";
 import Image from "next/image";
 
-export default async function TechIcons({ techStack }: TechIconProps) {
+export default async function TechIcons({ techStack, ...props }: TechIconProps) {
 
   const techIcons = (await getTechLogos(techStack)).slice(0,3);
 
@@ -9,7 +9,7 @@ export default async function TechIcons({ techStack }: TechIconProps) {
     <div className="flex gap-1">
       {techIcons.map(({tech, url}, index) => (
         <div key={tech} className={"flex justify-center p-2 border rounded-full"}>
-          <Image src={url} alt={tech} width={30} height={30} />
+          <Image src={url} alt={tech} width={30} height={30} {...props}/>
         </div>
       ))}
     </div>

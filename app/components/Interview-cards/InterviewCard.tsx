@@ -32,7 +32,7 @@ export default function InterviewCard({
         <h3 className="text-white font-medium text-xl">{role} Interview</h3>
         <p className="font-extralight text-gray-300">
           {feedback?.finalAssessment ||
-            "You haven taken this interview yet. Take it now to improve your skills"}
+            "You haven't taken this interview yet. Take it now to improve your skills"}
         </p>
       </header>
       {/* <div className="flex flex-row gap-5 mt-3">
@@ -54,7 +54,7 @@ export default function InterviewCard({
         <span className="text-white text-md">{normalizedType}</span>
       </div>
       <footer className="flex justify-between items-center gap-2">
-        <TechIcons techStack={techstack} />
+        <TechIcons techStack={techstack} className=""/>
         <Button className="w-3/5 lg:text-lg lg:py-4 xl:py-6">
           <Link
             href={
