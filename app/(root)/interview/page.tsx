@@ -1,5 +1,6 @@
 import TechIcons from "@/app/components/Interview-cards/TechIcons";
 import Image from "next/image";
+import ProfileScreen from "./components/ProfileScreen";
 
 export default function Interview() {
   return (
@@ -20,21 +21,17 @@ export default function Interview() {
             <TechIcons techStack={["React", "Next.js"]} className="w-3 h-3 sm:w-5 sm:h-5"/>
           </div>
         </div>
-        <div className="bg-[#24273A] px-2 py-1 rounded-sm sm:px-4 sm:py-3">
-          <p className="text-white text-xs sm:text-base">Technical Interview</p>
+        <div className="bg-[#24273A] px-2 py-1 rounded-lg sm:px-4 sm:py-2">
+          <p className="text-white text-xs sm:text-sm font-medium">Technical Interview</p>
         </div>
       </div>
-      <div>
-        <div>
-          {/* <Image /> */}
-          <div>IntervAI</div>
-        </div>
-        <div>
-          {/* <Image /> */}
-          <div>Alejandro (you)</div>
-        </div>
+      <div className="flex mt-6 gap-2 sm:gap-3 flex-col sm:flex-row">
+        <ProfileScreen name="IntervAI" src="logo.svg" />
+        <ProfileScreen name="Alejandro Betancourth" src="profile.svg" />
       </div>
-      <div></div>
+      <div className="border w-full h-12 sm:h-18 bg-[#1A1A1A] mt-6 rounded-lg text-white text-sm sm:text-lg text-center">
+        This is a test text
+      </div>
       <div>
         <button>Repeat</button>
         <button>Leave Interview</button>

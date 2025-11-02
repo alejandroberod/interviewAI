@@ -97,3 +97,8 @@ interface TechIconProps {
   techStack: string[];
   className: string
 }
+
+interface ProfileScreenProps {
+  name: string;
+  src: string;
+}
