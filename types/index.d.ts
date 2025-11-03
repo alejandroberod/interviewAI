@@ -99,6 +99,8 @@ interface TechIconProps {
 }
 
 interface ProfileScreenProps {
-  name: string;
-  src: string;
+  userName?: string;
+  userId?: string;
+  src?: string;
+  isSpeaking?: boolean;
 }
